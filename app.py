@@ -2,12 +2,27 @@ import flet as ft
 from random import randint
 
 class myClassName:
- 
-    def main(page: ft.Page):
+    SinglePlayer_AnswerRand = 0
+    DoublePlayer_AnswerRand = 0
+obj = myClassName()
+    
+def main(page: ft.Page):
         page.title = "GUESS ME"
-        DoublePlayer_LL = 0
-        DoublePlayer_UL = 0
+        page.theme_mode = "Dark"
         
+        page.window_bgcolor = ft.colors.TRANSPARENT
+        page.bgcolor = ft.colors.TRANSPARENT
+        page.window_left = 400
+        page.window_top = 200
+        
+        theme = ft.Theme()
+        theme.page_transitions.android = ft.PageTransitionTheme.CUPERTINO
+        theme.page_transitions.ios = ft.PageTransitionTheme.CUPERTINO
+        theme.page_transitions.macos = ft.PageTransitionTheme.CUPERTINO
+        theme.page_transitions.linux = ft.PageTransitionTheme.CUPERTINO
+        theme.page_transitions.windows = ft.PageTransitionTheme.CUPERTINO
+        page.theme = theme
+        page.update()
         
     #######################################################################################################################
     # UNIVERSAL ELEMENTS
@@ -21,35 +36,61 @@ class myClassName:
       
         
         # SinglePlayer Alert Menu ##################################################
-        def SinglePlayer_AlertMenu_dismissed(e):
-            print("SinglePlayer Alert Menu Dismissed!")
+        SinglePlayer_Game_LowerLimit_input = ft.TextField(label="Lower Limit", width=300)
+        SinglePlayer_Game_UpperLimit_input = ft.TextField(label="Upper Limit", width=300)
 
-        def show_SinglePlayer_AlertMenu(e):
-            SinglePlayer_AlertMenu.open = True
-            SinglePlayer_AlertMenu.update()
+        # print("Lower Limits",SinglePlayer_Game_LowerLimit_input.value)
+        # print("Upper Limits",SinglePlayer_Game_UpperLimit_input.value)
+        
+        #DoublePlayer_lowerLimit = int(DoublePlayer_Game_LowerLimit_input.value)
+        #DoublePlayer_upperLimit = int(SinglePlayer_Game_UpperLimit_input.value)
+       
+        def SinglePlayer_CancleGame(e):
+            page.banner.open = False
+            page.update()
+        
+        def SinglePlayer_StartGame(e):
+            # SinglePlayer_lowerLimit = SinglePlayer_Game_LowerLimit_input.value
+            # SinglePlayer_upperLimit = SinglePlayer_Game_UpperLimit_input.value
+                
+            SinglePlayer_LL = int(SinglePlayer_Game_LowerLimit_input.value)
+            SinglePlayer_UL = int(SinglePlayer_Game_UpperLimit_input.value)
+            
+            obj.SinglePlayer_AnswerRand = randint(SinglePlayer_LL,SinglePlayer_UL)
+            
+            print(f"SP LL", SinglePlayer_LL)
+            print(f"SP UL", SinglePlayer_UL)
+            
+            page.go("/SinglePlayer")
+            print(f"=>", "SINGLE PLAYER :", obj.SinglePlayer_AnswerRand)
+            page.banner.open = False
+            
+            page.update()
 
-        def close_SinglePlayer_AlertMenu(e):
-            SinglePlayer_AlertMenu.open = False
-            SinglePlayer_AlertMenu.update()
         
-        SinglePlayer_AlertMenu = ft.BottomSheet(
-            ft.Container(
-                ft.Column(
-                    [
-                        ft.Text("This is sheet's content!"),
-                        ft.ElevatedButton("Close bottom sheet", on_click=close_SinglePlayer_AlertMenu),
-                    ],
-                    tight=True,
-                ),
-                padding=20,
-                width=300,
-                height=180
-            ),
-            open=True,
-            on_dismiss=SinglePlayer_AlertMenu_dismissed,
-        )
+        def SinglePlayer_Banner_function():
+            page.banner = ft.Banner(
+                bgcolor= "#272727",
+                #leading=ft.Icon(ft.icons.WARNING_AMBER_ROUNDED, color=ft.colors.AMBER, size=40),
+                content=ft.Text("Set LIMITS Single Player,",font_family="fnt_MonoT", size=20),
+                actions=[
+                
+                    ft.Row([ft.Container(width=20),SinglePlayer_Game_LowerLimit_input,ft.Container(width=5)]),
+                    ft.Container(height=5),
+                    ft.Row([ft.Container(width=20),SinglePlayer_Game_UpperLimit_input,ft.Container(width=5)]),
+                    ft.Container(height=10),
+                    ft.Row([ft.Container(width=20),ft.ElevatedButton("START", on_click=SinglePlayer_StartGame, width=300),ft.Container(width=10)]),
+                    ft.Container(height=5),
+                    ft.Row([ft.Container(width=20),ft.ElevatedButton("Cancle", on_click=SinglePlayer_CancleGame, width=300),ft.Container(width=10)]),
+                    ft.Container(height=20)
+                ],
+            )
+
+        def show_SinglePlayer_banner_click(e):
+            SinglePlayer_Banner_function()
+            page.banner.open = True
+            page.update()
         
-        page.overlay.append(SinglePlayer_AlertMenu)
         ##################################################################
         
         
@@ -60,12 +101,15 @@ class myClassName:
         DoublePlayer_Game_LowerLimit_input = ft.TextField(label="Lower Limit", width=300)
         DoublePlayer_Game_UpperLimit_input = ft.TextField(label="Upper Limit", width=300)
 
-        print("Lower Limits",DoublePlayer_Game_LowerLimit_input.value)
-        print("Upper Limits",DoublePlayer_Game_UpperLimit_input.value)
+        # print("Lower Limits",DoublePlayer_Game_LowerLimit_input.value)
+        # print("Upper Limits",DoublePlayer_Game_UpperLimit_input.value)
         
         #DoublePlayer_lowerLimit = int(DoublePlayer_Game_LowerLimit_input.value)
         #DoublePlayer_upperLimit = int(DoublePlayer_Game_UpperLimit_input.value)
        
+        def DoublePlayer_CancleGame(e):
+            page.banner.open = False
+            page.update()
             
         def DoublePlayer_StartGame(e):
             # DoublePlayer_lowerLimit = DoublePlayer_Game_LowerLimit_input.value
@@ -74,31 +118,38 @@ class myClassName:
             DoublePlayer_LL = int(DoublePlayer_Game_LowerLimit_input.value)
             DoublePlayer_UL = int(DoublePlayer_Game_UpperLimit_input.value)
             
-            print(f"pp ll", DoublePlayer_LL)
-            print(f"pp ul", DoublePlayer_UL)
+            obj.DoublePlayer_AnswerRand = randint(DoublePlayer_LL,DoublePlayer_UL)
+            
+            print(f"DP LL", DoublePlayer_LL)
+            print(f"DP UL", DoublePlayer_UL)
             
             page.go("/DoublePlayer")
+            print(f"=>", "DOUBLE PLAYER :", obj.DoublePlayer_AnswerRand)
             page.banner.open = False
             
             
             page.update()
 
-        page.banner = ft.Banner(
-            bgcolor= "#272727",
-            #leading=ft.Icon(ft.icons.WARNING_AMBER_ROUNDED, color=ft.colors.AMBER, size=40),
-            content=ft.Text("Set LIMITS,",font_family="fnt_MonoT", size=20),
-            actions=[
-              
-                ft.Row([ft.Container(width=20),DoublePlayer_Game_LowerLimit_input,ft.Container(width=5)]),
-                ft.Container(height=5),
-                ft.Row([ft.Container(width=20),DoublePlayer_Game_UpperLimit_input,ft.Container(width=5)]),
-                ft.Container(height=10),
-                ft.Row([ft.Container(width=20),ft.ElevatedButton("START", on_click=DoublePlayer_StartGame, width=300),ft.Container(width=10)]),
-                ft.Container(height=20)
-            ],
-        )
+        def DoublePlayer_Banner_function():
+            page.banner = ft.Banner(
+                bgcolor= "#272727",
+                #leading=ft.Icon(ft.icons.WARNING_AMBER_ROUNDED, color=ft.colors.AMBER, size=40),
+                content=ft.Text("Set LIMITS Double Player,",font_family="fnt_MonoT", size=20),
+                actions=[
+                
+                    ft.Row([ft.Container(width=20),DoublePlayer_Game_LowerLimit_input,ft.Container(width=5)]),
+                    ft.Container(height=5),
+                    ft.Row([ft.Container(width=20),DoublePlayer_Game_UpperLimit_input,ft.Container(width=5)]),
+                    ft.Container(height=10),
+                    ft.Row([ft.Container(width=20),ft.ElevatedButton("START", on_click=DoublePlayer_StartGame, width=300),ft.Container(width=10)]),
+                    ft.Container(height=5),
+                    ft.Row([ft.Container(width=20),ft.ElevatedButton("Cancle", on_click=DoublePlayer_CancleGame, width=300),ft.Container(width=10)]),
+                    ft.Container(height=20)
+                ],
+            )
 
-        def show_banner_click(e):
+        def show_DoublePlayer_banner_click(e):
+            DoublePlayer_Banner_function()
             page.banner.open = True
             page.update()
         
@@ -147,8 +198,8 @@ class myClassName:
     #########################################################################################################################
 
       #Answers
-        DoublePlayer_AnswerRand = randint(DoublePlayer_LL,DoublePlayer_UL)
-        SinglePlayer_AnswerRand = randint(1,100)
+       
+        
 
 
 
@@ -178,7 +229,8 @@ class myClassName:
                     height=130,
                     padding=-8,
                     #on_click=show_SinglePlayer_AlertMenu
-                    on_click=lambda _: page.go("/SinglePlayer")
+                    #on_click=lambda _: page.go("/SinglePlayer")
+                    on_click=show_SinglePlayer_banner_click
                 ),
                 style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=15)),
                 #style=ft.ButtonStyle(shape={ft.MaterialState.DEFAULT: RoundedRectangleBorder(radius=20)})
@@ -200,7 +252,7 @@ class myClassName:
                     width=120,
                     height=130,
                     padding=2,
-                    on_click=show_banner_click,
+                    on_click=show_DoublePlayer_banner_click,
                     #on_click=lambda _: page.go("/DoublePlayer")
                     
                 ),
@@ -298,17 +350,15 @@ class myClassName:
         # Result
         SinglePlayer_result = ft.Text(font_family="fnt_Ubuntu", size=18)
         
-        print(f"=>", "SINGLE PLAYER :", SinglePlayer_AnswerRand)
-        
         # Check Answer Player1
         def checkAns_player1(e):
-          if float(SinglePlayer_check_player1.value ) > SinglePlayer_AnswerRand:
+          if float(SinglePlayer_check_player1.value ) > obj.SinglePlayer_AnswerRand:
               SinglePlayer_result.value = "Guess A Lower Value"
               
-          elif float(SinglePlayer_check_player1.value ) < SinglePlayer_AnswerRand:
+          elif float(SinglePlayer_check_player1.value ) < obj.SinglePlayer_AnswerRand:
               SinglePlayer_result.value = "Guess A Higher Value"
               
-          elif float(SinglePlayer_check_player1.value ) == SinglePlayer_AnswerRand:
+          elif float(SinglePlayer_check_player1.value ) == obj.SinglePlayer_AnswerRand:
               SinglePlayer_result.value = "Yep! Player 1 Won The Match"
               
           else:
@@ -336,7 +386,7 @@ class myClassName:
         SinglePlayer_AppBar = ft.AppBar(
             leading=ft.IconButton(ft.icons.NUMBERS_SHARP),
             leading_width=70,
-            title=ft.Text("~ Guess Me", weight=ft.FontWeight.W_100, font_family="fnt_MonoT", size=16),
+            title=ft.Text("~ Guess Me / SinglePlayer.py", weight=ft.FontWeight.W_100, font_family="fnt_MonoT", size=16),
             center_title=True,
             bgcolor="#363636",
             toolbar_height=40,
@@ -377,17 +427,17 @@ class myClassName:
         # Result
         DoublePlayer_result = ft.Text(font_family="fnt_Ubuntu", size=18)
         
-        print(f"=>", "DOUBLE PLAYER :", DoublePlayer_AnswerRand)
+       
         
         # Check Answer Player1
         def DoublePlayer_checkAns_player1(e):
-          if float(DoublePlayer_check_player1.value ) > DoublePlayer_AnswerRand:
+          if float(DoublePlayer_check_player1.value ) > obj.DoublePlayer_AnswerRand:
               DoublePlayer_result.value = "Guess A Lower Value"
               
-          elif float(DoublePlayer_check_player1.value ) < DoublePlayer_AnswerRand:
+          elif float(DoublePlayer_check_player1.value ) < obj.DoublePlayer_AnswerRand:
               DoublePlayer_result.value = "Guess A Higher Value"
               
-          elif float(DoublePlayer_check_player1.value ) == DoublePlayer_AnswerRand:
+          elif float(DoublePlayer_check_player1.value ) == obj.DoublePlayer_AnswerRand:
               DoublePlayer_result.value = "Yep! Player 1 Won The Match"
               
           else:
@@ -397,13 +447,13 @@ class myClassName:
           
         # Check Answer Player2
         def DoublePlayer_checkAns_player2(e):
-          if float(DoublePlayer_check_player2.value ) > DoublePlayer_AnswerRand:
+          if float(DoublePlayer_check_player2.value ) > obj.DoublePlayer_AnswerRand:
               DoublePlayer_result.value = "Guess A Lower Value"
               
-          elif float(DoublePlayer_check_player2.value ) < DoublePlayer_AnswerRand:
+          elif float(DoublePlayer_check_player2.value ) < obj.DoublePlayer_AnswerRand:
               DoublePlayer_result.value = "Guess A Higher Value"
               
-          elif float(DoublePlayer_check_player2.value ) == DoublePlayer_AnswerRand:
+          elif float(DoublePlayer_check_player2.value ) == obj.DoublePlayer_AnswerRand:
               DoublePlayer_result.value = "Yep! Player 2 Won The Match"
               
           else:
@@ -430,7 +480,7 @@ class myClassName:
         DoublePlayer_AppBar = ft.AppBar(
             leading=ft.IconButton(ft.icons.NUMBERS_SHARP),
             leading_width=70,
-            title=ft.Text("~ Guess Me", weight=ft.FontWeight.W_100, font_family="fnt_MonoT", size=16),
+            title=ft.Text("~ Guess Me / 1vs1.py", weight=ft.FontWeight.W_100, font_family="fnt_MonoT", size=16),
             center_title=True,
             bgcolor="#363636",
             toolbar_height=40,
@@ -487,6 +537,9 @@ class myClassName:
                     [
                         MENU_AppBar,
                         ft.Container(height=20),#spaces
+                        
+                        ft.Text("  Get your game, ", size=20, font_family="fnt_Ubuntu", text_align="CENTER"),
+                        ft.Container(height=5),#spaces
                         
                         ft.Column([ft.Row([btn1,btn2],alignment="center")]),
                         ft.Container(height=20),#spaces
@@ -570,4 +623,4 @@ class myClassName:
     #########################################################################################################################
     ######################################################################################################################### 
 
-    ft.app(target=main, view=ft.AppView.WEB_BROWSER)
+ft.app(target=main, view=ft.AppView.WEB_BROWSER)
